@@ -26,24 +26,22 @@ export function handlePaused(event: PausedEvent): void {
 }
 
 export function handleRoleAdminChanged(event: RoleAdminChangedEvent): void {
-  let role = Role.load(event.params.role.toHex())
+  let role = Role.load(event.transaction.hash.toHex())
   if (role === null) {
-    role = new Role(event.params.role.toHex())
+    role = new Role(event.transaction.hash.toHex())
   }
   
-  let entity = new RoleAdminChanged(
+  let roleAdminChangedEntity = new RoleAdminChanged(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
-  entity.role = event.params.role
-  entity.previousAdminRole = event.params.previousAdminRole
-  entity.newAdminRole = event.params.newAdminRole
+  roleAdminChangedEntity.role = event.params.role
+  roleAdminChangedEntity.previousAdminRole = event.params.previousAdminRole
+  roleAdminChangedEntity.newAdminRole = event.params.newAdminRole
     
-  if (role.id.toString() == entity.newAdminRole.toHexString()) {
-    role.adminRole = entity.newAdminRole
-  }
+  role.adminRole = roleAdminChangedEntity.role
 
   role.save()
-  entity.save()
+  roleAdminChangedEntity.save()
 }
 
 export function handleRoleGranted(event: RoleGrantedEvent): void {
