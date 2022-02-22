@@ -5,13 +5,14 @@ const app = express();
 const PORT = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello Ondo');
+  res.send('Hello World');
 });
 
 app.get('/roles', async (req, res) => {
     try {
       const response = await getResult()
-      res.send(response)
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(response, null, 2))
 
     } catch (err) {
       console.log(err)
@@ -37,8 +38,5 @@ const getResult = async () => {
     })
 
   return result.data.data
-
-  // await fetch(`https://api.thegraph.com/subgraphs/name/crywolfe/ondofinanceroles`,
-
 }
   
